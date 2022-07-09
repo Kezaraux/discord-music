@@ -1,0 +1,25 @@
+{
+  "name": "discord-music",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "bin-version-check-cli": "^3.0.0"
+  },
+  "dependencies": {
+    "@discordjs/builders": "^0.15.0",
+    "@discordjs/rest": "^0.5.0",
+    "@discordjs/voice": "^0.10.0",
+    "discord.js": "^13.8.1",
+    "ffmpeg-static": "^4.4.1",
+    "node-gyp": "^9.0.0",
+    "play-dl": "^1.9.5",
+    "sodium": "^3.0.2",
+    "winston": "^3.8.0"
+  }
+}

@@ -1,0 +1,5 @@
+{
+    "token": "<BOT LOGIN TOKEN HERE | Found on application page>",
+    "guildId": "<DISCORD SERVER ID | Right click server with developer mode enabled>",
+    "clientId": "<BOT CLIENT ID | Found on application page>"
+}
