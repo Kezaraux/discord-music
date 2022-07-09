@@ -1,5 +1,4 @@
-const { createAudioResource, getVoiceConnection, joinVoiceChannel } = require("@discordjs/voice");
-const ytdl = require("ytdl-core");
+const { getVoiceConnection, joinVoiceChannel } = require("@discordjs/voice");
 
 const musicState = require("../constants/musicState");
 const { ephemeralReply, updateMusicMessage } = require("./messageHelper");
