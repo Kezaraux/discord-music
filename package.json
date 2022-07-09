@@ -8,9 +8,6 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "bin-version-check-cli": "^3.0.0"
-  },
   "dependencies": {
     "@discordjs/builders": "^0.15.0",
     "@discordjs/rest": "^0.5.0",
