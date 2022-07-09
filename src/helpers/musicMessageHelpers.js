@@ -1,5 +1,4 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
-const ytdl = require("ytdl-core");
 const { video_basic_info } = require("play-dl");
 
 const buttonCustomIds = require("../constants/buttonCustomIds");
@@ -9,7 +8,6 @@ const constructMusicMessage = async (musicPlayerObj, active = true) => {
     const { status, queue, currentSong, voiceChannelName } = musicPlayerObj;
     const playing = status === musicState.PLAYING;
 
-    // TODO: Conditionally render Play/Pause and Skip based on connected or not
     const controlRow = new MessageActionRow().addComponents(
         new MessageButton()
             .setCustomId(playing ? buttonCustomIds.PAUSE : buttonCustomIds.UNPAUSE)
@@ -29,14 +27,11 @@ const constructMusicMessage = async (musicPlayerObj, active = true) => {
             .setStyle("SECONDARY")
     );
 
-    // const info = currentSong ? await ytdl.getBasicInfo(currentSong) : "Nothing";
     const info = currentSong ? await video_basic_info(currentSong) : "Nothing";
-    // console.log({ info });
 
     const embed = new MessageEmbed()
         .setTitle(active ? `Music player for ${voiceChannelName}` : "Inactive music player")
         .addField("Status", `${active ? status : "INACTIVE"}`)
-        // .addField("Now playing", `${active ? info?.videoDetails?.title ?? info : "Nothing"}`)
         .addField("Now playing", `${active ? info?.video_details?.title ?? info : "Nothing"}`)
         .addField("Songs in queue", `${active ? queue.length : "0"}`);
 

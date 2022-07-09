@@ -1,5 +1,4 @@
-const { createAudioResource, getVoiceConnection, joinVoiceChannel } = require("@discordjs/voice");
-const ytdl = require("ytdl-core");
+const { createAudioResource } = require("@discordjs/voice");
 const play = require("play-dl");
 
 const buttonCustomIds = require("../constants/buttonCustomIds");

@@ -1,7 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { Permissions } = require("discord.js");
-const { joinVoiceChannel, createAudioPlayer, createAudioResource } = require("@discordjs/voice");
-const ytdl = require("ytdl-core");
+const { joinVoiceChannel, createAudioResource } = require("@discordjs/voice");
 const play = require("play-dl");
 
 const { constructMusicMessage } = require("../helpers/musicMessageHelpers.js");
@@ -59,9 +57,6 @@ module.exports = {
         client.musicObj.guildId = newMessage.guild.id;
         client.musicObj.voiceChannelId = voiceChannel.id;
         client.musicObj.voiceChannelName = voiceChannel.name;
-
-        // const stream = ytdl(song, { filter: "audioonly" });
-        // const resource = createAudioResource(stream);
 
         const connection = joinVoiceChannel({
             channelId: voiceChannel.id,

@@ -2,7 +2,6 @@ const fs = require("fs");
 const winston = require("winston");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
-const ytdl = require("ytdl-core");
 const { createAudioPlayer, createAudioResource, getVoiceConnection } = require("@discordjs/voice");
 
 const { Client, Collection, Intents } = require("discord.js");
@@ -69,7 +68,6 @@ for (const file of eventFiles) {
 
 // Handle music player events
 player.on("idle", async (oldState, newState) => {
-    // console.log({ oldState, newState });
     client.musicObj.currentSong = client.musicObj.queue.shift();
     if (!client.musicObj.currentSong) {
         client.musicObj.status = musicState.DISCONNECTED;
@@ -78,8 +76,8 @@ player.on("idle", async (oldState, newState) => {
         if (connection) connection.destroy();
         return;
     }
-    const stream = ytdl(client.musicObj.currentSong, { filter: "audioonly" });
-    const resource = createAudioResource(stream);
+    const source = await play.stream(client.musicObj.currentSong);
+    const resource = createAudioResource(source.stream, { inputType: source.type });
     player.play(resource);
     updateMusicMessage(client);
 });
@@ -90,10 +88,6 @@ player.on("autopaused", async (oldState, newState) => {
     await updateMusicMessage(client);
     const connection = getVoiceConnection(client.musicObj.guildId);
     if (connection) connection.destroy();
-});
-
-player.on("aborted", () => {
-    logger.info("Player aborted?");
 });
 
 player.on("error", (err) => {
@@ -133,14 +127,6 @@ client.once("ready", async () => {
             logger.info("Successfully registered application commands");
         })
         .catch(console.error);
-
-    // Register features (IF WE HAD ANY)
-    // const featureFiles = fs.readdirSync("./src/features");
-    // for (const file of featureFiles) {
-    //     const feature = require(`./src/features/${file}`);
-    //     logger.info(`Registering feature: ${feature.name}`);
-    //     feature.execute(client, logger);
-    // }
 
     logger.info("The bot is ready to handle commands!");
 });

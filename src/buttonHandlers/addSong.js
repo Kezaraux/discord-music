@@ -1,7 +1,6 @@
 const { Modal, MessageActionRow, TextInputComponent } = require("discord.js");
 
 const buttonCustomIds = require("../constants/buttonCustomIds");
-const { ephemeralReply } = require("../helpers/messageHelper");
 const { checkMemberInVoice } = require("../helpers/voiceHelpers");
 
 module.exports = {

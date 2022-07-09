@@ -23,8 +23,6 @@ const checkMemberInVoice = async (interaction) => {
 const checkVoiceAndReconnect = (interaction) => {
     const { client, guild } = interaction;
     if (!getVoiceConnection(client.musicObj.guildId)) {
-        // const guild = await interaction.client.guilds.cache.get(client.musicObj.guildId);
-
         const connection = joinVoiceChannel({
             channelId: client.musicObj.voiceChannelId,
             guildId: client.musicObj.guildId,
