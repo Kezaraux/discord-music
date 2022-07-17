@@ -3,8 +3,9 @@ const winston = require("winston");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const { createAudioPlayer, createAudioResource, getVoiceConnection } = require("@discordjs/voice");
-
 const { Client, Collection, Intents } = require("discord.js");
+const play = require("play-dl");
+
 const { token, guildId, clientId } = require("./config.json");
 const { updateMusicMessage, deleteMusicMessage } = require("./src/helpers/messageHelper");
 const musicState = require("./src/constants/musicState");
@@ -68,6 +69,7 @@ for (const file of eventFiles) {
 
 // Handle music player events
 player.on("idle", async (oldState, newState) => {
+    logger.info("Player moved to idle state");
     client.musicObj.currentSong = client.musicObj.queue.shift();
     if (!client.musicObj.currentSong) {
         client.musicObj.status = musicState.DISCONNECTED;
