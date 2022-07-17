@@ -1,26 +1,26 @@
-const { Modal, MessageActionRow, TextInputComponent } = require("discord.js");
+const { ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
 
 const buttonCustomIds = require("../constants/buttonCustomIds");
 const { checkMemberInVoice } = require("../helpers/voiceHelpers");
 
 module.exports = {
     name: buttonCustomIds.ADD_SONG,
-    execute: async ({ interaction, client, logger }) => {
+    execute: async ({ interaction, logger }) => {
         logger.info("Handling add song button");
 
         if (!(await checkMemberInVoice(interaction))) return;
 
-        const modal = new Modal()
+        const modal = new ModalBuilder()
             .setCustomId(buttonCustomIds.ADD_SONG)
             .setTitle("Add a song!")
             .addComponents(
-                new MessageActionRow().addComponents(
-                    new TextInputComponent()
+                new ActionRowBuilder().addComponents(
+                    new TextInputBuilder()
                         .setCustomId("song")
                         .setLabel("Youtube URL")
-                        .setStyle("SHORT")
-                )
+                        .setStyle(TextInputStyle.Short),
+                ),
             );
         await interaction.showModal(modal);
-    }
+    },
 };

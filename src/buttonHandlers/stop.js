@@ -18,7 +18,7 @@ module.exports = {
 
         await ephemeralReply(
             interaction,
-            "I stopped this instance of the music player and updated the message!"
+            "I stopped this instance of the music player and updated the message!",
         );
-    }
+    },
 };

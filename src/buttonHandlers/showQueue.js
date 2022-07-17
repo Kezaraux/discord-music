@@ -15,7 +15,7 @@ module.exports = {
         if (firstFive.length == 0) {
             await ephemeralReply(
                 interaction,
-                "The queue is empty! Consider adding some songs to it."
+                "The queue is empty! Consider adding some songs to it.",
             );
             return;
         }
@@ -32,5 +32,5 @@ module.exports = {
         } ${songSongs} ${isAre}: \n${songNames.join("\n")}`;
 
         await ephemeralReply(interaction, queueMessage);
-    }
+    },
 };

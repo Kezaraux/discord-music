@@ -30,5 +30,5 @@ module.exports = {
         await updateMusicMessage(client);
 
         await ephemeralReply(interaction, "Added song");
-    }
+    },
 };

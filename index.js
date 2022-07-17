@@ -1,10 +1,10 @@
 const fs = require("fs");
 const winston = require("winston");
 const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v9");
 const { createAudioPlayer, createAudioResource, getVoiceConnection } = require("@discordjs/voice");
+const play = require("play-dl");
+const { Client, Collection, Routes, GatewayIntentBits } = require("discord.js");
 
-const { Client, Collection, Intents } = require("discord.js");
 const { token, guildId, clientId } = require("./config.json");
 const { updateMusicMessage, deleteMusicMessage } = require("./src/helpers/messageHelper");
 const musicState = require("./src/constants/musicState");
@@ -13,12 +13,10 @@ const player = createAudioPlayer();
 
 const client = new Client({
     intents: [
-        Intents.FLAGS.GUILDS,
-        Intents.FLAGS.GUILD_MEMBERS,
-        Intents.FLAGS.GUILD_MESSAGES,
-        Intents.FLAGS.GUILD_SCHEDULED_EVENTS,
-        Intents.FLAGS.GUILD_VOICE_STATES
-    ]
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildVoiceStates,
+    ],
 });
 client.commands = new Collection();
 client.buttonHandlers = new Collection();
@@ -33,17 +31,17 @@ client.musicObj = {
     voiceChannelName: "",
     guildId: "",
     status: musicState.DISCONNECTED,
-    queue: []
+    queue: [],
 };
 
 const logger = winston.createLogger({
     transports: [new winston.transports.Console()],
-    format: winston.format.printf((log) => `[${log.level.toUpperCase()}] - ${log.message}`)
+    format: winston.format.printf(log => `[${log.level.toUpperCase()}] - ${log.message}`),
 });
 
 // Register commands
 const cmds = [];
-const commandFiles = fs.readdirSync("./src/commands").filter((file) => file.endsWith(".js"));
+const commandFiles = fs.readdirSync("./src/commands").filter(file => file.endsWith(".js"));
 for (const file of commandFiles) {
     const command = require(`./src/commands/${file}`);
     logger.info(`Registering command: ${command.data.name}`);
@@ -52,14 +50,14 @@ for (const file of commandFiles) {
 }
 
 // Register event listeners
-const eventFiles = fs.readdirSync("./src/events").filter((file) => file.endsWith(".js"));
+const eventFiles = fs.readdirSync("./src/events").filter(file => file.endsWith(".js"));
 for (const file of eventFiles) {
     const event = require(`./src/events/${file}`);
     logger.info(`Registering event: ${event.name}`);
     if (event.once) {
         client.once(
             event.name,
-            async (...args) => await event.execute({ ...args, client, logger })
+            async (...args) => await event.execute({ ...args, client, logger }),
         );
     } else {
         client.on(event.name, async (...args) => await event.execute({ ...args, client, logger }));
@@ -67,7 +65,8 @@ for (const file of eventFiles) {
 }
 
 // Handle music player events
-player.on("idle", async (oldState, newState) => {
+player.on("idle", async () => {
+    logger.info("Player went idle");
     client.musicObj.currentSong = client.musicObj.queue.shift();
     if (!client.musicObj.currentSong) {
         client.musicObj.status = musicState.DISCONNECTED;
@@ -82,7 +81,7 @@ player.on("idle", async (oldState, newState) => {
     updateMusicMessage(client);
 });
 
-player.on("autopaused", async (oldState, newState) => {
+player.on("autopaused", async () => {
     logger.info("Autopaused - Bot was probably manually disconnected");
     client.musicObj.status = musicState.DISCONNECTED_AND_PAUSED;
     await updateMusicMessage(client);
@@ -90,7 +89,7 @@ player.on("autopaused", async (oldState, newState) => {
     if (connection) connection.destroy();
 });
 
-player.on("error", (err) => {
+player.on("error", err => {
     logger.info("Player encountered error");
     console.error(err);
 });
@@ -98,7 +97,7 @@ player.on("error", (err) => {
 // Register button handlers
 const buttonHandlerFiles = fs
     .readdirSync("./src/buttonHandlers")
-    .filter((file) => file.endsWith(".js"));
+    .filter(file => file.endsWith(".js"));
 for (const file of buttonHandlerFiles) {
     const handler = require(`./src/buttonHandlers/${file}`);
     logger.info(`Registering button handler: ${handler.name}`);
@@ -108,7 +107,7 @@ for (const file of buttonHandlerFiles) {
 // Register modal handlers
 const modalHandlerFiles = fs
     .readdirSync("./src/modalHandlers")
-    .filter((file) => file.endsWith(".js"));
+    .filter(file => file.endsWith(".js"));
 for (const file of modalHandlerFiles) {
     const handler = require(`./src/modalHandlers/${file}`);
     logger.info(`Registering modal handler: ${handler.name}`);
@@ -118,10 +117,10 @@ for (const file of modalHandlerFiles) {
 client.once("ready", async () => {
     logger.info("Registering commands with the API");
 
-    const rest = new REST({ version: "9" }).setToken(token);
+    const rest = new REST({ version: "10" }).setToken(token);
 
     rest.put(Routes.applicationGuildCommands(clientId, guildId), {
-        body: cmds.map((cmd) => cmd.toJSON())
+        body: cmds.map(cmd => cmd.toJSON()),
     })
         .then(() => {
             logger.info("Successfully registered application commands");
@@ -163,7 +162,7 @@ process.on("SIGUSR2", () => {
     exitHandler();
     process.exit(0);
 });
-process.on("uncaughtException", (err) => {
+process.on("uncaughtException", err => {
     logger.info("Handling uncaught exception");
     console.error(err, "Uncaught exception thrown");
     exitHandler();

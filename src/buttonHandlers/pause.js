@@ -15,5 +15,5 @@ module.exports = {
         updateMusicMessage(client);
 
         await ephemeralReply(interaction, "Paused");
-    }
+    },
 };

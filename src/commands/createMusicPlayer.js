@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
+const { SlashCommandBuilder } = require("discord.js");
 const { joinVoiceChannel, createAudioResource } = require("@discordjs/voice");
 const play = require("play-dl");
 
@@ -6,7 +6,7 @@ const { constructMusicMessage } = require("../helpers/musicMessageHelpers.js");
 const { ephemeralReply } = require("../helpers/messageHelper.js");
 const {
     checkSendMessagePermission,
-    checkVoicePermissions
+    checkVoicePermissions,
 } = require("../helpers/permissionHelpers");
 const musicState = require("../constants/musicState");
 const { validYoutubeUrl } = require("../helpers/voiceHelpers");
@@ -17,16 +17,16 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("play-music")
         .setDescription(
-            "Joins the bot to your voice channel and creates a message to control music playback."
+            "Joins the bot to your voice channel and creates a message to control music playback.",
         )
-        .addStringOption((option) =>
+        .addStringOption(option =>
             option
                 .setName(songOption)
                 .setDescription("The Youtube URL of the initial song you wish to play.")
-                .setRequired(true)
+                .setRequired(true),
         ),
-    execute: async (interaction, logger) => {
-        const { member, options, client, guild, channel } = interaction;
+    execute: async interaction => {
+        const { member, options, client, channel } = interaction;
         const voiceChannel = member?.voice?.channel;
 
         if (!(await checkSendMessagePermission(interaction))) return;
@@ -49,7 +49,7 @@ module.exports = {
 
         const musicEmbedObject = await constructMusicMessage(client.musicObj);
         const newMessage = await channel.send({
-            ...musicEmbedObject
+            ...musicEmbedObject,
         });
 
         client.musicObj.messageId = newMessage.id;
@@ -61,7 +61,7 @@ module.exports = {
         const connection = joinVoiceChannel({
             channelId: voiceChannel.id,
             guildId: voiceChannel.guild.id,
-            adapterCreator: voiceChannel.guild.voiceAdapterCreator
+            adapterCreator: voiceChannel.guild.voiceAdapterCreator,
         });
 
         const source = await play.stream(client.musicObj.currentSong);
@@ -71,5 +71,5 @@ module.exports = {
         connection.subscribe(client.player);
 
         await ephemeralReply(interaction, "Done");
-    }
+    },
 };

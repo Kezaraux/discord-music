@@ -21,7 +21,7 @@ module.exports = {
             const connection = joinVoiceChannel({
                 channelId: client.musicObj.voiceChannelId,
                 guildId: client.musicObj.guildId,
-                adapterCreator: guild.voiceAdapterCreator
+                adapterCreator: guild.voiceAdapterCreator,
             });
             connection.subscribe(client.player);
         }
@@ -31,5 +31,5 @@ module.exports = {
         updateMusicMessage(client);
 
         await ephemeralReply(interaction, "Playing");
-    }
+    },
 };

@@ -1,8 +1,10 @@
+const { InteractionType } = require("discord.js");
+
 module.exports = {
     name: "interactionCreate",
     once: false,
     execute: async ({ 0: interaction, client, logger }) => {
-        if (!interaction.isButton()) return;
+        if (interaction.type !== InteractionType.MessageComponent) return;
         logger.info("Handling a button");
 
         const { customId } = interaction;
@@ -10,7 +12,7 @@ module.exports = {
             logger.info(`Unknown button interaction with custom id: ${customId}`);
             interaction.reply({
                 content: "Sorry, I didn't know how to respond to this interaction!",
-                ephemeral: true
+                ephemeral: true,
             });
             return;
         }
@@ -22,5 +24,5 @@ module.exports = {
         } catch (error) {
             console.error(error);
         }
-    }
+    },
 };

@@ -1,8 +1,10 @@
+const { InteractionType } = require("discord.js");
+
 module.exports = {
     name: "interactionCreate",
     once: false,
     execute: async ({ 0: interaction, client, logger }) => {
-        if (!interaction.isCommand()) return;
+        if (interaction.type !== InteractionType.ApplicationCommand) return;
 
         const { commandName } = interaction;
         logger.info(`Handling command: ${commandName}`);
@@ -14,5 +16,5 @@ module.exports = {
         } catch (error) {
             console.error(error);
         }
-    }
+    },
 };
