@@ -14,7 +14,7 @@
     "discord.js": "^14.0.1",
     "ffmpeg-static": "^5.0.2",
     "node-gyp": "^9.1.0",
-    "play-dl": "^1.9.5",
+    "play-dl": "^1.9.6",
     "sodium": "^3.0.2",
     "winston": "^3.8.1"
   }
